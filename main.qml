@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
+import QtQuick.Dialogs 1.3
 import "workScripts.js" as WorkScripts
 
 Window {
@@ -12,6 +13,21 @@ Window {
     Component.onCompleted: {
         setX(Screen.width / 2 - width / 2);
         setY(Screen.height / 2 - height / 2);
+    }
+
+    MessageDialog {
+        id: messageDialog
+        icon: StandardIcon.Information
+        title: "Congratulation!!!"
+        text: "The puzzle has been solved. Do you want to solve another one?"
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            cellsModel.clear()
+            gameBoard.values = WorkScripts.getShuffledValues(16);
+            gameBoard.values.forEach(element => cellsModel.append({value: element}));
+        }
+        onNo: console.log("presed no")
+        Component.onCompleted: visible = false
     }
 
     Rectangle {
@@ -73,7 +89,7 @@ Window {
                             anchors.fill: parent
                             onClicked: {
                                 view.currentIndex = model.index
-                                console.log("current " + gameBoard.values[index] + " index " + index)
+
                                 let swapResult = WorkScripts.swapWithZeroIfPosible(gameBoard.values, model.value);
                                 if(swapResult) { // if swap success
                                     let shift = 0;
@@ -88,18 +104,21 @@ Window {
                                         }
                                     }
                                     if(WorkScripts.checkComplete(gameBoard.values)) {
-                                        console.log("Congr");
-                                        var component = Qt.createComponent("CongratWindow.qml")
-                                        var window    = component.createObject(root)
-                                        window.show()
+                                        messageDialog.open();
                                     }
                                 }
                             }
                         }
                     }
                 }
+
+                move: Transition {
+                    id: moveTrans
+                    SequentialAnimation {
+                        NumberAnimation { properties: "x,y"; duration: 400;}
+                    }
+                }
             }
         }
     }
-
 }

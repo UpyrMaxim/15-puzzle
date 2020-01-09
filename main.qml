@@ -5,31 +5,39 @@ import "workScripts.js" as WorkScripts
 
 Window {
     id: root
+
+    function resetBoard()
+    {
+        cellsModel.clear();
+        gameBoard.values = WorkScripts.getShuffledValues(gameBoard.dementionX, gameBoard.dementionY);
+        gameBoard.values.forEach(element => cellsModel.append({value: element}));
+    }
+
+    x: { Screen.width / 2 - width / 2 }
+    y: { Screen.height / 2 - height / 2 }
     visible: true
     width: 340
     height: width + 50
     title: qsTr("Hello World")
 
-    Component.onCompleted: {
-        setX(Screen.width / 2 - width / 2);
-        setY(Screen.height / 2 - height / 2);
-    }
-
     MessageDialog {
         id: messageDialog
+
         icon: StandardIcon.Information
         title: "Congratulation!!!"
         text: "The puzzle has been solved. Do you want to solve another one?"
         standardButtons: StandardButton.Yes | StandardButton.No
+        visible: false
+
         onYes: {
-            resetBoard(gameBoard.dementionX * gameBoard.dementionY);
+            resetBoard();
         }
         onNo: console.log("presed no")
-        Component.onCompleted: visible = false
     }
 
     Rectangle {
         id: background
+
         anchors.fill: parent
         color: "#deb887"
 
@@ -47,35 +55,32 @@ Window {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: {
-                     resetBoard(gameBoard.dementionX * gameBoard.dementionY);
-                }
+                onClicked: resetBoard()
             }
         }
 
 
         Rectangle {
             id: gameBoard
+
+            property int dementionY: 4
+            property int dementionX: 4
+            property var values: []
+
             y: 40
             x: 10
             width: parent.width - 20
             height: width + 20
             color: "#ffe4c4"
-            property int dementionY: 4
-            property int dementionX: 4
-            property var values: []
 
             ListModel {
                 id: cellsModel
-
-                Component.onCompleted: {
-                    gameBoard.values = WorkScripts.getShuffledValues(gameBoard.dementionX * gameBoard.dementionY);
-                    gameBoard.values.forEach(element => append({value: element}));
-                }
+                Component.onCompleted: resetBoard()
             }
 
             GridView {
                 id: view
+
                 anchors.margins: 0
                 anchors.fill: parent
                 cellHeight: parent.height / gameBoard.dementionY
@@ -96,7 +101,7 @@ Window {
                             color: "black"
                             width: 1
                         }
-                        visible: model.value > 0 ? true : false;
+                        visible: model.value > 0
 
                         Text {
                             anchors.centerIn: parent
@@ -107,22 +112,19 @@ Window {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                view.currentIndex = model.index
+                                view.currentIndex = model.index;
 
                                 let swapResult = WorkScripts.swapWithZeroIfPosible(gameBoard.values, model.value, gameBoard.dementionX, gameBoard.dementionY);
-                                if(swapResult) { // if swap success
+                                if (swapResult) { // if swap success
                                     let shift = 0;
                                     let currentPosition = index;
                                     [gameBoard.values, shift] = swapResult;
-                                    cellsModel.move(view.currentIndex, view.currentIndex - shift, 1)
-                                    if(Math.abs(shift) > 1) { // if bot or top swap
-                                        if(shift > 0) {
-                                            cellsModel.move(view.currentIndex - shift + 1, view.currentIndex, 1)
-                                        } else {
-                                            cellsModel.move(view.currentIndex - shift - 1, view.currentIndex, 1)
-                                        }
+                                    cellsModel.move(view.currentIndex, view.currentIndex - shift, 1);
+                                    if (Math.abs(shift) > 1) { // if bot or top swap
+                                        shift = shift > 0 ? shift - 1 : shift + 1;
+                                        cellsModel.move(view.currentIndex - shift, view.currentIndex, 1);
                                     }
-                                    if(WorkScripts.checkComplete(gameBoard.values)) {
+                                    if (WorkScripts.checkComplete(gameBoard.values)) {
                                         messageDialog.open();
                                     }
                                 }
@@ -132,19 +134,11 @@ Window {
                 }
 
                 move: Transition {
-                    id: moveTrans
                     SequentialAnimation {
                         NumberAnimation { properties: "x,y"; duration: 400;}
                     }
                 }
             }
         }
-    }
-
-    function resetBoard(elementsCount)
-    {
-        cellsModel.clear()
-        gameBoard.values = WorkScripts.getShuffledValues(elementsCount)
-        gameBoard.values.forEach(element => cellsModel.append({value: element}));
     }
 }

@@ -7,7 +7,7 @@ Window {
     id: root
     visible: true
     width: 340
-    height: 400
+    height: width + 50
     title: qsTr("Hello World")
 
     Component.onCompleted: {
@@ -22,9 +22,7 @@ Window {
         text: "The puzzle has been solved. Do you want to solve another one?"
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
-            cellsModel.clear()
-            gameBoard.values = WorkScripts.getShuffledValues(16);
-            gameBoard.values.forEach(element => cellsModel.append({value: element}));
+            resetBoard(gameBoard.dementionX * gameBoard.dementionY);
         }
         onNo: console.log("presed no")
         Component.onCompleted: visible = false
@@ -35,22 +33,43 @@ Window {
         anchors.fill: parent
         color: "#deb887"
 
+        Rectangle {
+            y: 10
+            x: parent.width - 20 - width
+            width: 60
+            height: 20
+            radius: height / 2
+
+            Text {
+                x: 10
+                text: "Reset"
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                     resetBoard(gameBoard.dementionX * gameBoard.dementionY);
+                }
+            }
+        }
+
 
         Rectangle {
             id: gameBoard
             y: 40
             x: 10
             width: parent.width - 20
-            height: parent.width
+            height: width + 20
             color: "#ffe4c4"
-
+            property int dementionY: 4
+            property int dementionX: 4
             property var values: []
 
             ListModel {
                 id: cellsModel
 
                 Component.onCompleted: {
-                    gameBoard.values = WorkScripts.getShuffledValues(16);
+                    gameBoard.values = WorkScripts.getShuffledValues(gameBoard.dementionX * gameBoard.dementionY);
                     gameBoard.values.forEach(element => append({value: element}));
                 }
             }
@@ -59,8 +78,8 @@ Window {
                 id: view
                 anchors.margins: 0
                 anchors.fill: parent
-                cellHeight: parent.height / 4
-                cellWidth: parent.width / 4
+                cellHeight: parent.height / gameBoard.dementionY
+                cellWidth: parent.width / gameBoard.dementionX
                 model: cellsModel
                 clip: true
                 delegate: Item {
@@ -90,7 +109,7 @@ Window {
                             onClicked: {
                                 view.currentIndex = model.index
 
-                                let swapResult = WorkScripts.swapWithZeroIfPosible(gameBoard.values, model.value);
+                                let swapResult = WorkScripts.swapWithZeroIfPosible(gameBoard.values, model.value, gameBoard.dementionX, gameBoard.dementionY);
                                 if(swapResult) { // if swap success
                                     let shift = 0;
                                     let currentPosition = index;
@@ -120,5 +139,12 @@ Window {
                 }
             }
         }
+    }
+
+    function resetBoard(elementsCount)
+    {
+        cellsModel.clear()
+        gameBoard.values = WorkScripts.getShuffledValues(elementsCount)
+        gameBoard.values.forEach(element => cellsModel.append({value: element}));
     }
 }

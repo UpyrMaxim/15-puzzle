@@ -9,7 +9,7 @@ Window {
     function resetBoard()
     {
         cellsModel.clear();
-        gameBoard.values = WorkScripts.getShuffledValues(gameBoard.dementionX, gameBoard.dementionY);
+        gameBoard.values = WorkScripts.getShuffledValues(gameBoard.dimentionX, gameBoard.dimentionY);
         gameBoard.values.forEach(element => cellsModel.append({value: element}));
     }
 
@@ -63,8 +63,8 @@ Window {
         Rectangle {
             id: gameBoard
 
-            property int dementionY: 4
-            property int dementionX: 4
+            property int dimentionY: 4
+            property int dimentionX: 4
             property var values: []
 
             y: 40
@@ -83,8 +83,8 @@ Window {
 
                 anchors.margins: 0
                 anchors.fill: parent
-                cellHeight: parent.height / gameBoard.dementionY
-                cellWidth: parent.width / gameBoard.dementionX
+                cellHeight: parent.height / gameBoard.dimentionY
+                cellWidth: parent.width / gameBoard.dimentionX
                 model: cellsModel
                 clip: true
                 delegate: Item {
@@ -114,7 +114,7 @@ Window {
                             onClicked: {
                                 view.currentIndex = model.index;
 
-                                let swapResult = WorkScripts.swapWithZeroIfPosible(gameBoard.values, model.value, gameBoard.dementionX, gameBoard.dementionY);
+                                let swapResult = WorkScripts.swapWithZeroIfPosible(gameBoard.values, model.value, gameBoard.dimentionX, gameBoard.dimentionY);
                                 if (swapResult) { // if swap success
                                     let shift = 0;
                                     let currentPosition = index;

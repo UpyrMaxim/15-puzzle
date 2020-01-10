@@ -1,20 +1,20 @@
-function getShuffledValues(dementionX, dementionY)
+function getShuffledValues(dimentionX, dimentionY)
 {
     // return correct array for 15-puzzle
     let resultArray = false;
     var arr = [];
     while (!resultArray) {
-        arr = Array.from(Array(dementionX * dementionY).keys()); // create array 0,1,2...cellNumbers
+        arr = Array.from(Array(dimentionX * dimentionY).keys()); // create array 0,1,2...cellNumbers
         arr.sort(() => Math.random() - 0.5);  // shuffle values
 
         console.log(arr);
-        resultArray = checkCorrectnessPuzzle(arr, dementionY);
+        resultArray = checkCorrectnessPuzzle(arr, dimentionY);
     }
 
     return arr;
 }
 
-function checkCorrectnessPuzzle(arr, dementionY)
+function checkCorrectnessPuzzle(arr, dimentionY)
 {
     let inv = 0;
     let arrayLenght = arr.length;
@@ -30,7 +30,7 @@ function checkCorrectnessPuzzle(arr, dementionY)
     }
     for (i = 0; i < arrayLenght; ++i) {
         if (arr[i] === 0) {
-            inv += 1 + i / dementionY;
+            inv += 1 + i / dimentionY;
         }
     }
 
@@ -52,30 +52,30 @@ function checkComplete(arr)
     return false;
 }
 
-function swapWithZeroIfPosible(arr, value, dementionX = 4, dementionY = 4)
+function swapWithZeroIfPosible(arr, value, dimentionX = 4, dimentionY = 4)
 {
     let indexOFValue = arr.indexOf(value);
-    let row =  Math.trunc(indexOFValue / dementionY);
-    let col = indexOFValue % dementionX;
+    let row =  Math.trunc(indexOFValue / dimentionY);
+    let col = indexOFValue % dimentionX;
 
     // check top element
-    if (row > 0 && arr[((row - 1) * dementionY) + col] === 0) {
-        return swap(arr,indexOFValue,((row - 1) * dementionY) + col);
+    if (row > 0 && arr[((row - 1) * dimentionY) + col] === 0) {
+        return swap(arr,indexOFValue,((row - 1) * dimentionY) + col);
     }
 
     // check left element
-    if (col > 0 && arr[((row * dementionY) + col) - 1] === 0) {
-        return swap(arr,indexOFValue,((row * dementionY) + col) - 1);
+    if (col > 0 && arr[((row * dimentionY) + col) - 1] === 0) {
+        return swap(arr,indexOFValue,((row * dimentionY) + col) - 1);
     }
 
     // check right element
-    if (col < dementionX - 1 && arr[((row * dementionY) + col) + 1] === 0) {
-        return swap(arr,indexOFValue,((row * dementionY) + col) + 1);
+    if (col < dimentionX - 1 && arr[((row * dimentionY) + col) + 1] === 0) {
+        return swap(arr,indexOFValue,((row * dimentionY) + col) + 1);
     }
 
     // check bottom element
-    if (row < dementionY - 1 && arr[((row + 1) * dementionY) + col] === 0) {
-        return swap(arr,indexOFValue,((row + 1) * dementionY) + col);
+    if (row < dimentionY - 1 && arr[((row + 1) * dimentionY) + col] === 0) {
+        return swap(arr,indexOFValue,((row + 1) * dimentionY) + col);
     }
     return false;
 }

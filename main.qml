@@ -1,17 +1,9 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Dialogs 1.3
-import "workScripts.js" as WorkScripts
-
+import custom.GemPuzzleModel 1.0
 Window {
     id: root
-
-    function resetBoard()
-    {
-        cellsModel.clear();
-        gameBoard.values = WorkScripts.getShuffledValues(gameBoard.dimentionX, gameBoard.dimentionY);
-        gameBoard.values.forEach(element => cellsModel.append({value: element}));
-    }
 
     x: { Screen.width / 2 - width / 2 }
     y: { Screen.height / 2 - height / 2 }
@@ -29,9 +21,7 @@ Window {
         standardButtons: StandardButton.Yes | StandardButton.No
         visible: false
 
-        onYes: {
-            resetBoard();
-        }
+        onYes: gemPuzzleModel.resetCells(gameBoard.dimentionX,gameBoard.dimentionY)
         onNo: console.log("presed no")
     }
 
@@ -55,7 +45,7 @@ Window {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: resetBoard()
+                onClicked: gemPuzzleModel.resetCells(gameBoard.dimentionX,gameBoard.dimentionY)
             }
         }
 
@@ -73,11 +63,6 @@ Window {
             height: width + 20
             color: "#ffe4c4"
 
-            ListModel {
-                id: cellsModel
-                Component.onCompleted: resetBoard()
-            }
-
             GridView {
                 id: view
 
@@ -85,7 +70,13 @@ Window {
                 anchors.fill: parent
                 cellHeight: parent.height / gameBoard.dimentionY
                 cellWidth: parent.width / gameBoard.dimentionX
-                model: cellsModel
+                model: GemPuzzleModel{
+                    id: gemPuzzleModel
+
+                    Component.onCompleted: {
+                        gemPuzzleModel.resetCells(gameBoard.dimentionX,gameBoard.dimentionY)
+                    }
+                }
                 clip: true
                 delegate: Item {
                     property var view: GridView.view
@@ -101,39 +92,28 @@ Window {
                             color: "black"
                             width: 1
                         }
-                        visible: model.value > 0
+                        visible: display > 0
 
                         Text {
                             anchors.centerIn: parent
                             renderType: Text.NativeRendering
-                            text: model.value
+                            text: display | ""
                         }
 
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
                                 view.currentIndex = model.index;
-
-                                let swapResult = WorkScripts.swapWithZeroIfPosible(gameBoard.values, model.value, gameBoard.dimentionX, gameBoard.dimentionY);
-                                if (swapResult) { // if swap success
-                                    let shift = 0;
-                                    let currentPosition = index;
-                                    [gameBoard.values, shift] = swapResult;
-                                    cellsModel.move(view.currentIndex, view.currentIndex - shift, 1);
-                                    if (Math.abs(shift) > 1) { // if bot or top swap
-                                        shift = shift > 0 ? shift - 1 : shift + 1;
-                                        cellsModel.move(view.currentIndex - shift, view.currentIndex, 1);
-                                    }
-                                    if (WorkScripts.checkComplete(gameBoard.values)) {
-                                        messageDialog.open();
-                                    }
+                                gemPuzzleModel.swapWithZeroIfPosible(display);
+                                if (gemPuzzleModel.checkComplete()) {
+                                    messageDialog.open();
                                 }
                             }
                         }
                     }
                 }
 
-                move: Transition {
+                 move: Transition {
                     SequentialAnimation {
                         NumberAnimation { properties: "x,y"; duration: 400;}
                     }

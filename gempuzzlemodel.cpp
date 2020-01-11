@@ -136,6 +136,7 @@ int GemPuzzleModel::swapWithZeroIfPosible(const int value)
     // check bottom element
     if (row < dimentionY - 1 && cells[((row + 1) * dimentionY) + col] == 0) {
         newIndex = ((row + 1) * dimentionY) + col;
+        shift = 1;
     }
 
     if (newIndex > -1) {
@@ -152,11 +153,13 @@ int GemPuzzleModel::swapWithZeroIfPosible(const int value)
         qDebug() << "from: " << indexOFValue << " to: " << newIndex;
 
 
-        moveRow(QModelIndex(), indexOFValue, QModelIndex(), newIndex +1);
+        beginMoveRows(QModelIndex(), indexOFValue, indexOFValue, QModelIndex(), newIndex + shift);
         endMoveRows();
 
         if(abs(indexOFValue - newIndex) > 1) {
-            moveRows(QModelIndex(), newIndex + (newIndex > indexOFValue ? -1 : 1), newIndex  + (newIndex > indexOFValue ? -1 : 1), QModelIndex(), indexOFValue);
+            int zeroPositionShift = newIndex > indexOFValue ? -1 : 1;
+            cout << "shift: " << shift << endl;
+            beginMoveRows(QModelIndex(), newIndex + zeroPositionShift, newIndex + zeroPositionShift,QModelIndex(), indexOFValue + shift + zeroPositionShift);
             endMoveRows();
         }
 

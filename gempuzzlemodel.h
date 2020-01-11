@@ -3,9 +3,9 @@
 
 #include <QAbstractListModel>
 #include <vector>
-#include <algorithm>    // std::shuffle
-#include <random>       // std::default_random_engine
-#include <chrono>       // std::chrono::system_clock
+#include <algorithm>
+#include <random>
+#include <chrono>
 
 using namespace std;
 
@@ -20,11 +20,11 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     Q_INVOKABLE void resetCells(const int newDimentionX = 4, const int newDimentionY = 4);
-    Q_INVOKABLE bool checkCorrectnessPuzzle();
     Q_INVOKABLE bool checkComplete();
     Q_INVOKABLE int swapWithZeroIfPosible(const int value);
-    Q_INVOKABLE void move(int from, int to, int count = 1);
 
+private:
+    bool checkCorrectnessPuzzle();
 private:
     vector<int> cells;
     int dimentionX;

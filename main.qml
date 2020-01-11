@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Dialogs 1.3
 import custom.GemPuzzleModel 1.0
+
 Window {
     id: root
 
@@ -73,13 +74,10 @@ Window {
                 model: GemPuzzleModel{
                     id: gemPuzzleModel
 
-                    Component.onCompleted: {
-                        gemPuzzleModel.resetCells(gameBoard.dimentionX,gameBoard.dimentionY)
-                    }
+                    Component.onCompleted: gemPuzzleModel.resetCells(gameBoard.dimentionX,gameBoard.dimentionY)
                 }
                 clip: true
                 delegate: Item {
-                    property var view: GridView.view
                     property var isCurrent: GridView.isCurrentItem
 
                     height: view.cellHeight
@@ -104,9 +102,10 @@ Window {
                             anchors.fill: parent
                             onClicked: {
                                 view.currentIndex = model.index;
-                                gemPuzzleModel.swapWithZeroIfPosible(display);
-                                if (gemPuzzleModel.checkComplete()) {
-                                    messageDialog.open();
+                                if (gemPuzzleModel.swapWithZeroIfPosible(display)) {
+                                    if (gemPuzzleModel.checkComplete()) {
+                                        messageDialog.open();
+                                    }
                                 }
                             }
                         }

@@ -1,6 +1,4 @@
 #include "gempuzzlemodel.h"
-#include <QDebug>
-#include <iostream>
 
 GemPuzzleModel::GemPuzzleModel(QObject *parent, const int dimentionX, const int dimentionY)
     : QAbstractListModel(parent), dimentionX(dimentionX), dimentionY(dimentionY)
@@ -140,47 +138,20 @@ int GemPuzzleModel::swapWithZeroIfPosible(const int value)
     }
 
     if (newIndex > -1) {
-//        swap(cells[indexOFValue], cells[newIndex]);
-//        auto index = createIndex(indexOFValue, 0, nullptr);
-//        emit dataChanged(index, index, { Qt::DisplayRole });
-//        index = createIndex(newIndex, 0, nullptr);
-//        emit dataChanged(index, index, { Qt::DisplayRole });
-//        qDebug() << "from: " << indexOFValue << " to: " << newIndex;
-
-        for(const auto &tmp: cells)
-            cout << tmp<< " ";
-        cout << endl;
-        qDebug() << "from: " << indexOFValue << " to: " << newIndex;
-
-
         beginMoveRows(QModelIndex(), indexOFValue, indexOFValue, QModelIndex(), newIndex + shift);
         endMoveRows();
 
-        if(abs(indexOFValue - newIndex) > 1) {
+        if (abs(indexOFValue - newIndex) > 1) {
             int zeroPositionShift = newIndex > indexOFValue ? -1 : 1;
-            cout << "shift: " << shift << endl;
             beginMoveRows(QModelIndex(), newIndex + zeroPositionShift, newIndex + zeroPositionShift,QModelIndex(), indexOFValue + shift + zeroPositionShift);
             endMoveRows();
         }
 
         swap(cells[indexOFValue], cells[newIndex]);
-//        auto index = createIndex(indexOFValue, 0, nullptr);
-//        emit dataChanged(index, index, { Qt::DisplayRole });
-//        index = createIndex(newIndex, 0, nullptr);
-//        emit dataChanged(index, index, { Qt::DisplayRole });
-        for(const auto &tmp: cells)
-            cout << tmp << " ";
-        cout << endl;
         return indexOFValue - newIndex;
     }
 
     return false;
 }
-
-void GemPuzzleModel::move(int from, int to, int )
-{
-    qDebug() << "from: " << from << " to: " << to;
-}
-
 
 

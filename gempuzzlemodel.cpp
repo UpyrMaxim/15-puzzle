@@ -138,20 +138,25 @@ int GemPuzzleModel::swapWithZeroIfPosible(const int value)
     }
 
     if (newIndex > -1) {
-        beginMoveRows(QModelIndex(), indexOFValue, indexOFValue, QModelIndex(), newIndex + shift);
-        endMoveRows();
-
-        if (abs(indexOFValue - newIndex) > 1) {
-            int zeroPositionShift = newIndex > indexOFValue ? -1 : 1;
-            beginMoveRows(QModelIndex(), newIndex + zeroPositionShift, newIndex + zeroPositionShift,QModelIndex(), indexOFValue + shift + zeroPositionShift);
-            endMoveRows();
-        }
-
-        swap(cells[indexOFValue], cells[newIndex]);
+        moveCells(indexOFValue,newIndex,shift);
         return indexOFValue - newIndex;
     }
 
     return false;
 }
 
+
+void GemPuzzleModel::moveCells(int sourceIndex, int targetIndex, int shift)
+{
+    beginMoveRows(QModelIndex(), sourceIndex, sourceIndex, QModelIndex(), targetIndex + shift);
+    endMoveRows();
+
+    if (abs(sourceIndex - targetIndex) > 1) {
+        int zeroPositionShift = targetIndex > sourceIndex ? -1 : 1;
+        beginMoveRows(QModelIndex(), targetIndex + zeroPositionShift, targetIndex + zeroPositionShift,QModelIndex(), sourceIndex + shift + zeroPositionShift);
+        endMoveRows();
+    }
+
+    swap(cells[sourceIndex], cells[targetIndex]);
+}
 

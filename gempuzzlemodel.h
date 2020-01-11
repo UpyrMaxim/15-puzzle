@@ -25,6 +25,7 @@ public:
 
 private:
     bool checkCorrectnessPuzzle();
+    void moveCells(int sourceIndex, int targetIndex, int shift);
 private:
     vector<int> cells;
     int dimentionX;

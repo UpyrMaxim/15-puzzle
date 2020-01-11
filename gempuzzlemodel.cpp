@@ -110,33 +110,32 @@ int GemPuzzleModel::swapWithZeroIfPosible(const int value)
     }
 
     int indexOFValue = distance(cells.begin(), it);
-    int row =  indexOFValue / dimentionY;
-    int col = indexOFValue % dimentionY;
+    int row =  indexOFValue / dimentionX;
+    int col = indexOFValue % dimentionX;
     int newIndex = -1;
     int shift = 0;
 
     // check top element
-    if (row > 0 && cells[((row - 1) * dimentionY) + col] == 0) {
-        newIndex = ((row - 1) * dimentionY) + col;
+    if (row > 0 && cells[((row - 1) * dimentionX) + col] == 0) {
+        newIndex = ((row - 1) * dimentionX) + col;
     }
 
     // check left element
-    if (col > 0 && cells[((row * dimentionY) + col) - 1] == 0) {
-        newIndex = ((row * dimentionY) + col) - 1;
+    if (col > 0 && cells[((row * dimentionX) + col) - 1] == 0) {
+        newIndex = ((row * dimentionX) + col) - 1;
     }
 
     // check right element
-    if (col < dimentionX - 1 && cells[((row * dimentionY) + col) + 1] == 0) {
-        newIndex = ((row * dimentionY) + col) + 1;
+    if (col < dimentionX - 1 && cells[((row * dimentionX) + col) + 1] == 0) {
+        newIndex = ((row * dimentionX) + col) + 1;
         shift = 1;
     }
 
     // check bottom element
-    if (row < dimentionY - 1 && cells[((row + 1) * dimentionY) + col] == 0) {
-        newIndex = ((row + 1) * dimentionY) + col;
+    if (row < dimentionY - 1 && cells[((row + 1) * dimentionX) + col] == 0) {
+        newIndex = ((row + 1) * dimentionX) + col;
         shift = 1;
     }
-
     if (newIndex > -1) {
         moveCells(indexOFValue,newIndex,shift);
         return indexOFValue - newIndex;

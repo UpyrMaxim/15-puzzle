@@ -111,7 +111,7 @@ int GemPuzzleModel::swapWithZeroIfPosible(const int value)
 
     int indexOFValue = distance(cells.begin(), it);
     int row =  indexOFValue / dimentionY;
-    int col = indexOFValue % dimentionX;
+    int col = indexOFValue % dimentionY;
     int newIndex = -1;
     int shift = 0;
 

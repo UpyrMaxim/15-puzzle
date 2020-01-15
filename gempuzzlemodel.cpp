@@ -18,22 +18,26 @@ int GemPuzzleModel::rowCount(const QModelIndex &) const
 
 QVariant GemPuzzleModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid())
+    if (!index.isValid()) {
         return QVariant();
+    }
 
-    if (index.row() >= static_cast<int>(cells.size()))
+    if (index.row() >= static_cast<int>(cells.size())) {
         return QVariant();
+    }
 
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole) {
         return cells.at(index.row());
-    else
+    } else {
         return QVariant();
+    }
 }
 
 Qt::ItemFlags GemPuzzleModel::flags(const QModelIndex &index) const
 {
-    if (!index.isValid())
+    if (!index.isValid()) {
         return Qt::ItemIsEnabled;
+    }
 
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }

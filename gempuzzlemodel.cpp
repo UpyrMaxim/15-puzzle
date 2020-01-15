@@ -101,17 +101,10 @@ bool GemPuzzleModel::checkComplete()
     return false;
 }
 
-int GemPuzzleModel::swapWithZeroIfPosible(const int value)
+int GemPuzzleModel::swapWithZeroIfPosible(const int index)
 {
-    auto it = find(cells.begin(), cells.end(), value);
-
-    if (it == cells.end()) {
-        return false;
-    }
-
-    int indexOFValue = distance(cells.begin(), it);
-    int row =  indexOFValue / dimentionX;
-    int col = indexOFValue % dimentionX;
+    int row =  index / dimentionX;
+    int col = index % dimentionX;
     int newIndex = -1;
     int shift = 0;
 
@@ -137,8 +130,8 @@ int GemPuzzleModel::swapWithZeroIfPosible(const int value)
         shift = 1;
     }
     if (newIndex > -1) {
-        moveCells(indexOFValue,newIndex,shift);
-        return indexOFValue - newIndex;
+        moveCells(index,newIndex,shift);
+        return index - newIndex;
     }
 
     return false;

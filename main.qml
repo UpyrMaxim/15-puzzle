@@ -66,9 +66,9 @@ Window {
 
             GridView {
                 id: view
-
                 anchors.margins: 0
                 anchors.fill: parent
+                verticalLayoutDirection: GridView.BottomToTop
                 cellHeight: parent.height / gameBoard.dimentionY
                 cellWidth: parent.width / gameBoard.dimentionX
                 model: GemPuzzleModel{
@@ -102,7 +102,7 @@ Window {
                             anchors.fill: parent
                             onClicked: {
                                 view.currentIndex = model.index;
-                                if (gemPuzzleModel.swapWithZeroIfPosible(display)) {
+                                if (gemPuzzleModel.swapWithZeroIfPosible(index)) {
                                     if (gemPuzzleModel.checkComplete()) {
                                         messageDialog.open();
                                     }
